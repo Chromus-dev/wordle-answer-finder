@@ -1,0 +1,18 @@
+{
+	"name": "wordle-answer-finder",
+	"version": "1.0.0",
+	"description": "Answer finder for Wordle",
+	"main": "index.js",
+	"scripts": {
+		"run": "node index.js"
+	},
+	"author": "Chase",
+	"license": "ISC",
+	"dependencies": {
+		"chalk": "^4.1.2",
+		"readline-sync": "^1.4.10"
+	},
+	"devDependencies": {
+		"@types/readline-sync": "^1.4.4"
+	}
+}
