@@ -61,15 +61,11 @@ while (true) {
 	}
 
 	const possibleAnswers = getPossibleAnswers(noSpot, wrongSpot, rightSpot);
-	console.log(
-		'\n' +
-			chalk.green(
-				`${
-					possibleAnswers.length > 1 ? 'Possible answers' : 'Answer'
-				}: `
-			) +
-			possibleAnswers.join(', ')
-	);
+	if (possibleAnswers.length > 1)
+		console.log(
+			chalk.green('Possible Answers: ') + possibleAnswers.join(', ')
+		);
+	else console.log(chalk.green('Answer: ' + possibleAnswers[0]));
 
 	// keep updating until they say stop
 	if (
@@ -78,14 +74,14 @@ while (true) {
 		readline.keyInYN('Would you like to update your choices?')
 	)
 		updating = true;
-	else break;
+	else process.exit();
 }
 
 function getUserInput() {
 	console.log(chalk.bgGray('Letters not in the word'));
 	const noSpot = readline
 		.question('> ', {
-			limit: /^([A-Za-z])+$/,
+			limit: /^([A-Za-z]|_)+$/,
 		})
 		.toLowerCase();
 
