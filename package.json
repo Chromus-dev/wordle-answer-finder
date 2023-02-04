@@ -4,7 +4,8 @@
 	"description": "Answer finder for Wordle",
 	"main": "index.js",
 	"scripts": {
-		"run": "node index.js"
+		"run": "node index.js",
+		"package": "rm -rf bin && npx pkg index.js --output \"bin/Wordle Answer Finder\" --targets node18-linux-arm64,node18-macos-arm64,node18-win-arm64"
 	},
 	"author": "Chase",
 	"license": "ISC",
@@ -13,6 +14,15 @@
 		"readline-sync": "^1.4.10"
 	},
 	"devDependencies": {
-		"@types/readline-sync": "^1.4.4"
+		"@types/readline-sync": "^1.4.4",
+		"pkg": "^5.8.0"
+	},
+	"pkg": {
+		"targets": [
+			"node18-linux-arm64",
+			"node18-macos-arm64",
+			"node18-win-arm64"
+		],
+		"output": "bin/Wordle Answer Finder"
 	}
 }
