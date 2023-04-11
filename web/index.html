@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>Wordle Answer Finder</title>
+	</head>
+
+	<body>
+		<h1>Wordle Answer Finder</h1>
+
+		<div>
+			<div>
+				<h3>Not in the word</h3>
+				<input type="text" class="notInWordInput" />
+			</div>
+			<div>
+				<h3>In the wrong spot</h3>
+				<div class="letterInputRow autotab wrongSpotInput">
+					<input type="text" />
+					<input type="text" />
+					<input type="text" />
+					<input type="text" />
+					<input type="text" />
+				</div>
+
+				<button
+					type="button"
+					id="addWrongSpotRowButton"
+					onclick="addWrongSpotRow()"
+				>
+					.
+				</button>
+			</div>
+			<div>
+				<h3>In the right spot</h3>
+				<div class="letterInputRow autotab rightSpotInput">
+					<input type="text" />
+					<input type="text" />
+					<input type="text" />
+					<input type="text" />
+					<input type="text" />
+				</div>
+			</div>
+
+			<button type="button" onclick="getPossibleAnswers()">
+				Get Possible Answers
+			</button>
+
+			<div id="possibleAnswers"></div>
+		</div>
+
+		<script defer src="/src/script.js"></script>
+	</body>
+</html>
