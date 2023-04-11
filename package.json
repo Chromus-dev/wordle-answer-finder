@@ -2,7 +2,7 @@
 	"name": "wordle-answer-finder",
 	"version": "1.0.0",
 	"description": "Answer finder for Wordle",
-	"main": "index.js",
+	"main": "web/app.js",
 	"scripts": {
 		"console": "node console.js",
 		"start": "node web/app.js",
