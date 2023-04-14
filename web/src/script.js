@@ -1,14 +1,73 @@
-// autotab
-document.querySelectorAll('.autotab').forEach((parent) => {
+// only used for validation
+let noSpotChars = '';
+let wrongSpotChars = '';
+let rightSpotChars = '';
+document.addEventListener('keydown', (event) => {
+	console.log(event);
+	if (event.code !== 'Backspace' || !event.code.startsWith('Key')) return;
+
+	// remove
+	if (event.code == 'Backspace') {
+	}
+});
+function validateNotInNoSpotAndWrongOrRight() {}
+
+function addAutoTab(parent) {
 	Array.from(parent.children).forEach((el, i) => {
+		el.setAttribute('onkeydown', 'handleBackspaceAutoTab(event, this)');
 		el.setAttribute('onkeyup', 'autoTab(event, this)');
 		el.setAttribute('maxlength', '1');
 		el.setAttribute('data-index', i);
-	});
-});
 
+		// auto uppercase input to look nice
+		el.addEventListener('input', function (event) {
+			this.value = this.value.toUpperCase();
+		});
+
+		// limit to only characters
+		//https://stackoverflow.com/questions/22708434/restrict-characters-in-input-field
+		el.addEventListener('beforeinput', (event) => {
+			let regex = /^[a-zA-Z]*$/;
+			if (event.data != null && !regex.test(event.data))
+				event.preventDefault();
+		});
+	});
+}
+document.querySelectorAll('.autotab').forEach((parent) => {
+	addAutoTab(parent);
+});
 //TODO add holding down backspace
-//! fix backspace deleting previous input
+function handleBackspaceAutoTab(event, el) {
+	if (event.code !== 'Backspace') return;
+
+	event.preventDefault();
+
+	let toFocusEl = el.previousElementSibling;
+	// if (!toFocusEl) {
+	// 	// if the next row has all the same classes, set toFocusEl to the first child of that row
+	// 	// ex end of row going to next when there are multiple worngSpot rows
+	// 	let toFocusParent = el.parentElement.previousElementSibling;
+
+	// 	if (
+	// 		Array.from(el.parentElement.classList).every((c) => {
+	// 			return toFocusParent.classList.contains(c);
+	// 		})
+	// 	) {
+	// 		toFocusEl =
+	// 			toFocusParent.children[
+	// 				backspace ? toFocusParent.children.length - 1 : 0
+	// 			];
+	// 	} else return;
+	// }
+
+	// if it has content delete it
+	if (el.value.length === 1) el.value = '';
+	// else delete prev el content
+	else toFocusEl.value = '';
+
+	if (toFocusEl.parentElement.classList.contains('autotab'))
+		toFocusEl.focus();
+}
 function autoTab(event, el) {
 	let toFocusEl = el.nextElementSibling;
 	let upDown = false;
@@ -18,39 +77,13 @@ function autoTab(event, el) {
 		if (event.code === 'ArrowLeft') toFocusEl = el.previousElementSibling;
 		if (event.code === 'ArrowUp' || event.code === 'ArrowDown')
 			upDown = true;
+
+		select = true;
 	}
 
-	// if not a letter or backspace return
-	if (
-		!event.code.startsWith('Key') &&
-		event.code !== 'Backspace' &&
-		!event.code.startsWith('Arrow')
-	)
+	// if not a letter or arrow key
+	if (!event.code.startsWith('Key') && !event.code.startsWith('Arrow'))
 		return;
-
-	let backspace = false;
-	if (event.key === 'Backspace') {
-		toFocusEl = el.previousElementSibling;
-		backspace = true;
-	}
-
-	if (!toFocusEl) {
-		// if the next row has all the same classes, set toFocusEl to the first child of that row
-		// ex end of row going to next when there are multiple worngSpot rows
-		let toFocusParent = backspace
-			? el.parentElement.previousElementSibling
-			: el.parentElement.nextElementSibling;
-		if (
-			Array.from(el.parentElement.classList).every((c) => {
-				return toFocusParent.classList.contains(c);
-			})
-		) {
-			toFocusEl =
-				toFocusParent.children[
-					backspace ? toFocusParent.children.length - 1 : 0
-				];
-		} else return;
-	}
 
 	if (upDown) {
 		let toFocusParent =
@@ -61,9 +94,11 @@ function autoTab(event, el) {
 		toFocusEl = toFocusParent.children[el.dataset.index];
 	}
 
-	if (backspace && el.value == '') toFocusEl.value = '';
-	if (toFocusEl.parentElement.classList.contains('autotab'))
-		toFocusEl.focus();
+	if (!toFocusEl) return;
+
+	if (toFocusEl.parentElement.classList.contains('autotab')) {
+		toFocusEl.select();
+	}
 }
 
 // add wrong spot row
@@ -77,13 +112,9 @@ function addWrongSpotRow() {
 
 	for (let i = 0; i < 5; i++) {
 		let el = document.createElement('input');
-		el.setAttribute('type', 'text');
-		el.setAttribute('onkeyup', 'autoTab(event, this)');
-		el.setAttribute('maxlength', '1');
-		el.setAttribute('data-index', i);
-
 		parent.appendChild(el);
 	}
+	addAutoTab(parent);
 
 	currentRows[currentRows.length - 1].after(parent);
 }
@@ -121,6 +152,8 @@ function getPossibleAnswers() {
 			inRightSpot
 	).then((res) => {
 		res.json().then((possibleAnswers) => {
+			if (possibleAnswers.length === 0)
+				possibleAnswers.push('no answer found');
 			document.getElementById('possibleAnswers').innerText =
 				possibleAnswers.join(', ');
 		});

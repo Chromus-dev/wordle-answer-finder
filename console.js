@@ -70,7 +70,9 @@ while (true) {
 		console.log(
 			chalk.green('Possible Answers: ') + possibleAnswers.join(', ')
 		);
-	else console.log(chalk.green('Answer: ' + possibleAnswers[0]));
+	else if (possibleAnswers.length == 0) {
+		console.log(chalk.green('No possible answers found'));
+	} else console.log(chalk.green('Answer: ' + possibleAnswers[0]));
 
 	// keep updating until they say stop
 	if (
