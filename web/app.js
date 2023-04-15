@@ -1,10 +1,14 @@
 const express = require('express');
+const morgan = require('morgan')
 const wordleAnswerFinder = require('../lib');
 const { join: joinPaths } = require('path');
 
 const PORT = 8080;
 
 const app = express();
+
+// req logging
+app.use(morgan('short'))
 
 app.use('/src/', express.static(joinPaths(__dirname, './src/')));
 
